@@ -21,11 +21,24 @@ $watcher.IncludeSubdirectories = $true
 $watcher.Filter = "*.*"
 $watcher.NotifyFilter = [System.IO.NotifyFilters]::FileName, [System.IO.NotifyFilters]::LastWrite
 
+
+
+
+# Действие при изменении файлов
+$action = {
+    # Исключаем изменения в папке .git
+    if ($Event.SourceEventArgs.FullPath -notmatch "\\.git") {
+        CommitAndPush
+    } else {
+        Write-Host "Ignoring changes in .git directory."
+    }
+}
+
 # Подписка на события изменений
-Register-ObjectEvent $watcher Changed -Action { CommitAndPush }
-Register-ObjectEvent $watcher Created -Action { CommitAndPush }
-Register-ObjectEvent $watcher Deleted -Action { CommitAndPush }
-Register-ObjectEvent $watcher Renamed -Action { CommitAndPush }
+Register-ObjectEvent $watcher Changed -Action $action
+Register-ObjectEvent $watcher Created -Action $action
+Register-ObjectEvent $watcher Deleted -Action $action
+Register-ObjectEvent $watcher Renamed -Action $action
 
 # Запуск отслеживания
 $watcher.EnableRaisingEvents = $true
