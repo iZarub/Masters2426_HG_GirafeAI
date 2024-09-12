@@ -34,6 +34,6 @@ $watcher.EnableRaisingEvents = $true
 
 Write-Host "Monitoring changes in $repoPath. Press [Ctrl+C] to stop."
 while ($true) {
-    Start-Sleep -Seconds 30
+    Start-Sleep -Seconds 5
 }
 
